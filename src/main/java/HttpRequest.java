@@ -20,19 +20,19 @@ public class HttpRequest implements Runnable {
             inputStream = socket.getInputStream();
             outputStream = socket.getOutputStream();
 
+            String parsedHttpRequest[] = HttpRequestParser.parseRequest(inputStream).split("\n");
+            String requestPath = parsedHttpRequest[0];
+            String requestBody = parsedHttpRequest[parsedHttpRequest.length - 1];
 
-            String parsedHttpRequest = HttpRequestParser.parseRequest(inputStream);
-            if (parsedHttpRequest != null && parsedHttpRequest.length() > 0){
-            String httpMethod = parsedHttpRequest.trim().split(" ")[0];
-            String httpPath = parsedHttpRequest.trim().split(" ")[1];
-
-                System.out.println(parsedHttpRequest);
+            if (parsedHttpRequest != null && parsedHttpRequest[0].length() > 0){
+            String httpMethod = requestPath.trim().split(" ")[0];
+            String httpPath = requestPath.trim().split(" ")[1];
 
            switch (httpMethod){
                case ProjectConstants.GET: handleGetRequest(outputStream, httpPath);
                break;
                case ProjectConstants.POST:
-                   System.out.println("a");
+                   handlePostRequest(outputStream, requestBody);
                    break;
            }
             }
@@ -89,6 +89,38 @@ public class HttpRequest implements Runnable {
         catch (IOException ioException){
             ioException.printStackTrace();
         }
+    }
+
+    public void handlePostRequest(OutputStream outputStream, String requestBody){
+        if (requestBody == null){
+            String response = HttpResponse.getResponseNotFound();
+            try {
+                outputStream.write(response.getBytes());
+                return;
+            }
+            catch (IOException ioException){
+                ioException.printStackTrace();
+            }
+        }
+        String splittedBody[] = requestBody.trim().split("&");
+        String firstname = splittedBody[0].trim().split("=")[1];
+        String lastname = splittedBody[1].trim().split("=")[1];
+
+       String html = "<html>" +
+               "<body>" +
+               "<p>Received from variable with name [firstname] and value "+firstname+"</p>" +
+               "<p>Received from variable with name [lastname] and value "+lastname+"</p></body>" +
+               "</html>";
+
+       String response = HttpResponse.getResponseOK(html);
+
+       try {
+           outputStream.write(response.getBytes());
+           return;
+       }
+       catch (IOException ioException){
+           ioException.printStackTrace();
+       }
     }
 
     private static String readHTMLFile(String filePath) {
