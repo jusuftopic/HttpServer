@@ -17,18 +17,17 @@ public class HttpRequestParser {
             while ((c = reader.read()) != -1){
                 parsedRequest += (char) c;
 
-                if (parsedRequest.contains("\r\n\r\n")) break;
+                if (parsedRequest.contains("\r\n\r\n")) {break;};
             }
         }
         catch (IOException ioException){
             ioException.printStackTrace();
         }
-        return parsedRequest;
+        System.out.println("--------------------------");
+        System.out.println(parsedRequest);
+        System.out.println("-----------------------------");
+
+        return parsedRequest.split("\n")[0];
     }
 
-    public static String getPath(InputStream inputStream){
-        String parsedRequest[] = parseRequest(inputStream).split("\n");
-
-        return parsedRequest[0].trim().split(" ")[1];
-    }
 }
