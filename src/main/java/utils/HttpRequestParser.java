@@ -1,3 +1,5 @@
+package utils;
+
 import java.io.IOException;
 
 import java.io.InputStream;
@@ -26,7 +28,7 @@ public class HttpRequestParser {
             ioException.printStackTrace();
         }
 
-        System.out.println();
+        System.out.println(requestHeader.toString());
         return requestHeader.toString();
     }
 
