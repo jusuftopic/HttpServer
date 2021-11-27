@@ -21,11 +21,10 @@ public class HttpServer {
     }
 
     public void startListen(){
+        System.out.println("Server is running on port: "+ serverSocket.getLocalPort());
         try {
             while (true){
                 Socket socket = serverSocket.accept();
-                System.out.println("Server is running on port: "+ serverSocket.getLocalPort());
-                socket.setKeepAlive(true);
 
                 HttpRequest httpRequest = new HttpRequest(socket, rootDoc);
 

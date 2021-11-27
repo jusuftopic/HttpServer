@@ -17,7 +17,7 @@ public class HttpRequestParser {
             while ((c = reader.read()) != -1){
                 requestHeader.append((char) c);
 
-                if (requestHeader.indexOf("\r\n\r\n") != -1) {break;};
+                if (requestHeader.indexOf("\r\n\r\n") != -1) {break;}
             }
 
             while (reader.ready()){
@@ -27,8 +27,7 @@ public class HttpRequestParser {
         catch (IOException ioException){
             ioException.printStackTrace();
         }
-
-        System.out.println(requestHeader.toString());
+        
         return requestHeader.toString();
     }
 
